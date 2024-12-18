@@ -30,17 +30,27 @@ Java.perform(() => {
   // Access the Sensor class and define the accelerometer sensor type
   const Sensor = Java.use("android.hardware.Sensor");
   const SENSOR_TYPE_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER.value;
-  console.log("Accelerometer sensor type:", SENSOR_TYPE_ACCELEROMETER);
+  const SENSOR_TYPE_GYROSCOPE = Sensor.TYPE_GYROSCOPE.value;
+  console.log(
+    `Gyroscope sensor type: ${SENSOR_TYPE_GYROSCOPE}, Accelerometer sensor type: ${SENSOR_TYPE_ACCELEROMETER}`
+  );
 
   // Retrieve the default accelerometer sensor
   const accelerometerSensor = sensorManager.getDefaultSensor(
     SENSOR_TYPE_ACCELEROMETER
   );
+  const gyroscopeSensor = sensorManager.getDefaultSensor(SENSOR_TYPE_GYROSCOPE);
   if (accelerometerSensor === null) {
     console.error("Accelerometer sensor not found.");
-    return;
+  } else {
+    console.log("Accelerometer sensor retrieved successfully.");
   }
-  console.log("Accelerometer sensor retrieved successfully.");
+
+  if (gyroscopeSensor === null) {
+    console.error("Gyroscope sensor not found.");
+  } else {
+    console.log("Gyroscope sensor retrieved successfully.");
+  }
 
   // Access the internal SensorEventQueue class
   const SystemSensorManager = Java.use("android.hardware.SystemSensorManager");
@@ -74,6 +84,15 @@ Java.perform(() => {
       values[1] = 0.0; // Y-axis
       values[2] = 0.0; // Z-axis
       console.log("Accelerometer data modified:", values);
+    }
+
+    // Check if the event is from the gyroscope or accelerometer sensor
+    if (gyroscopeSensor !== null && handle === gyroscopeSensor.getHandle()) {
+      // Modify gyroscope values
+      values[0] = 5.0; // X-axis
+      values[1] = 5.0; // Y-axis
+      values[2] = 5.0; // Z-axis
+      console.log("Gyroscope data modified:", values);
     }
 
     // Call the original method with the (possibly) modified values
