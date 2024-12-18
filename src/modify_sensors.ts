@@ -128,12 +128,12 @@ interface ISensorEventQueue {
   ): void;
 }
 
-const ActivityThread: IActivityThread = Java.use("android.app.ActivityThread");
-const SensorManager: ISensorManager = Java.use(
-  "android.hardware.SensorManager"
-);
-const Sensor: ISensor = Java.use("android.hardware.Sensor");
-const SystemSensorManager = Java.use("android.hardware.SystemSensorManager");
-const SensorEventQueue: ISensorEventQueue = Java.use(
-  "android.hardware.SystemSensorManager$SensorEventQueue"
-);
+// const ActivityThread: IActivityThread = Java.use("android.app.ActivityThread");
+// const SensorManager: ISensorManager = Java.use(
+//   "android.hardware.SensorManager"
+// );
+// const Sensor: ISensor = Java.use("android.hardware.Sensor");
+// const SystemSensorManager = Java.use("android.hardware.SystemSensorManager");
+// const SensorEventQueue: ISensorEventQueue = Java.use(
+//   "android.hardware.SystemSensorManager$SensorEventQueue"
+// );
