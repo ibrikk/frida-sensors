@@ -1,0 +1,17 @@
+{
+  "name": "frida-scripts",
+  "version": "1.0.0",
+  "description": "frida -U -f com.galaxy.sensortoolbox -l modify_sensors.js --runtime=v8 --debug",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/frida-gum": "^18.7.1",
+    "frida": "^16.5.9",
+    "frida-compile": "^16.4.1"
+  }
+}
