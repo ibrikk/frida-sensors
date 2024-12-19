@@ -80,18 +80,18 @@ Java.perform(() => {
       handle === accelerometerSensor.getHandle()
     ) {
       // Modify the accelerometer values
-      values[0] = 0.0; // X-axis
-      values[1] = 0.0; // Y-axis
-      values[2] = 0.0; // Z-axis
+      values[0] = 5.0; // X-axis
+      values[1] = 5.0; // Y-axis
+      values[2] = 5.0; // Z-axis
       console.log("Accelerometer data modified:", values);
     }
 
     // Check if the event is from the gyroscope or accelerometer sensor
     if (gyroscopeSensor !== null && handle === gyroscopeSensor.getHandle()) {
       // Modify gyroscope values
-      values[0] = 5.0; // X-axis
-      values[1] = 5.0; // Y-axis
-      values[2] = 5.0; // Z-axis
+      values[0] = 7.0; // X-axis
+      values[1] = 7.0; // Y-axis
+      values[2] = 7.0; // Z-axis
       console.log("Gyroscope data modified:", values);
     }
 
