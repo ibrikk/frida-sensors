@@ -7,7 +7,7 @@ setTimeout(() => {
     const currentApplication = ActivityThread.currentApplication();
     if (currentApplication === null) {
       console.error("Failed to retrieve current application.");
-      return;
+      // return;
     }
     const context = currentApplication.getApplicationContext();
     if (context === null) {
@@ -106,4 +106,41 @@ setTimeout(() => {
 
     console.log("Frida script setup complete.");
   });
-}, 10); // Run after 10 milliseconds
+}, 10);
+
+interface IActivityThread {
+  currentApplication(): any;
+}
+
+interface IContext {
+  getApplicationContext(): any;
+  getSystemService(name: string): any;
+}
+
+interface ISensorManager {
+  getDefaultSensor(type: number): any;
+}
+
+interface ISensor {
+  TYPE_ACCELEROMETER: any;
+  getHandle(): any;
+}
+
+interface ISensorEventQueue {
+  dispatchSensorEvent(
+    handle: number,
+    values: number[],
+    accuracy: number,
+    timestamp: number
+  ): void;
+}
+
+// const ActivityThread: IActivityThread = Java.use("android.app.ActivityThread");
+// const SensorManager: ISensorManager = Java.use(
+//   "android.hardware.SensorManager"
+// );
+// const Sensor: ISensor = Java.use("android.hardware.Sensor");
+// const SystemSensorManager = Java.use("android.hardware.SystemSensorManager");
+// const SensorEventQueue: ISensorEventQueue = Java.use(
+//   "android.hardware.SystemSensorManager$SensorEventQueue"
+// );
