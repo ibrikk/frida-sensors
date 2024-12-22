@@ -108,33 +108,6 @@ setTimeout(() => {
   });
 }, 10);
 
-interface IActivityThread {
-  currentApplication(): any;
-}
-
-interface IContext {
-  getApplicationContext(): any;
-  getSystemService(name: string): any;
-}
-
-interface ISensorManager {
-  getDefaultSensor(type: number): any;
-}
-
-interface ISensor {
-  TYPE_ACCELEROMETER: any;
-  getHandle(): any;
-}
-
-interface ISensorEventQueue {
-  dispatchSensorEvent(
-    handle: number,
-    values: number[],
-    accuracy: number,
-    timestamp: number
-  ): void;
-}
-
 // const ActivityThread: IActivityThread = Java.use("android.app.ActivityThread");
 // const SensorManager: ISensorManager = Java.use(
 //   "android.hardware.SensorManager"
