@@ -132,9 +132,12 @@ setTimeout(() => {
         handle === geomagneticFieldSensor.getHandle()
       ) {
         spoofedValues = simulateGeomagneticField();
-        values[0] = spoofedValues[0];
-        values[1] = spoofedValues[1];
-        values[2] = spoofedValues[2];
+        // values[0] = spoofedValues[0];
+        // values[1] = spoofedValues[1];
+        // values[2] = spoofedValues[2];
+        values[0] = 5;
+        values[1] = 5;
+        values[2] = 5;
         console.log(`[Geomagnetic Field]: ${values}`);
       }
 
