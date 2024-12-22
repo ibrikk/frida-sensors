@@ -4,7 +4,7 @@ const randomRange = (min: number, max: number) => {
 };
 
 // Function to simulate different activities
-const simulateActivity = (activityType: string) => {
+const simulateActivity = (activityType: string, isLinear: boolean = false) => {
   let values = [0.0, 0.0, 0.0]; // Default sensor values
 
   switch (activityType) {
@@ -13,7 +13,7 @@ const simulateActivity = (activityType: string) => {
       values = [
         randomRange(-0.2, 0.2), // X-axis
         randomRange(-0.2, 0.2), // Y-axis
-        randomRange(9.8, 9.9), // Z-axis (gravity)
+        isLinear ? randomRange(-0.2, 0.2) : randomRange(9.8, 9.9), // Z-axis
       ];
       break;
 
@@ -27,11 +27,11 @@ const simulateActivity = (activityType: string) => {
       break;
 
     case "driving":
-      // Moderate fluctuations to simulate driving (vibrations and tilts)
+      // Moderate fluctuations to simulate driving
       values = [
         randomRange(-2.0, 2.0), // X-axis
         randomRange(-2.0, 2.0), // Y-axis
-        randomRange(8.0, 10.0), // Z-axis (car vibrations)
+        isLinear ? randomRange(-1.0, 1.0) : randomRange(8.0, 10.0), // Z-axis
       ];
       break;
 
@@ -42,6 +42,7 @@ const simulateActivity = (activityType: string) => {
   return values;
 };
 
+// Frida script logic
 setTimeout(() => {
   Java.perform(() => {
     console.log("Frida script started.");
@@ -59,12 +60,17 @@ setTimeout(() => {
     const Sensor = Java.use("android.hardware.Sensor");
     const SENSOR_TYPE_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER.value;
     const SENSOR_TYPE_GYROSCOPE = Sensor.TYPE_GYROSCOPE.value;
+    const SENSOR_TYPE_LINEAR_ACCELERATION =
+      Sensor.TYPE_LINEAR_ACCELERATION.value;
 
     const accelerometerSensor = sensorManager.getDefaultSensor(
       SENSOR_TYPE_ACCELEROMETER
     );
     const gyroscopeSensor = sensorManager.getDefaultSensor(
       SENSOR_TYPE_GYROSCOPE
+    );
+    const linearAccelerometerSensor = sensorManager.getDefaultSensor(
+      SENSOR_TYPE_LINEAR_ACCELERATION
     );
 
     const SystemSensorManager = Java.use(
@@ -83,13 +89,14 @@ setTimeout(() => {
       accuracy: number,
       timestamp: number
     ) {
-      // Simulate activity based on spoofingActivity
       let spoofedValues: number[];
+
+      // Handle Accelerometer
       if (
         accelerometerSensor !== null &&
         handle === accelerometerSensor.getHandle()
       ) {
-        spoofedValues = simulateActivity(spoofingActivity);
+        spoofedValues = simulateActivity(spoofingActivity, false); // false: include gravity
         values[0] = spoofedValues[0]; // X-axis
         values[1] = spoofedValues[1]; // Y-axis
         values[2] = spoofedValues[2]; // Z-axis
@@ -98,8 +105,9 @@ setTimeout(() => {
         );
       }
 
+      // Handle Gyroscope
       if (gyroscopeSensor !== null && handle === gyroscopeSensor.getHandle()) {
-        spoofedValues = simulateActivity(spoofingActivity);
+        spoofedValues = simulateActivity(spoofingActivity, false);
         values[0] = spoofedValues[0]; // X-axis
         values[1] = spoofedValues[1]; // Y-axis
         values[2] = spoofedValues[2]; // Z-axis
@@ -108,16 +116,32 @@ setTimeout(() => {
         );
       }
 
+      // Handle Linear Accelerometer
+      if (
+        linearAccelerometerSensor !== null &&
+        handle === linearAccelerometerSensor.getHandle()
+      ) {
+        spoofedValues = simulateActivity(spoofingActivity, true); // true: exclude gravity
+        values[0] = spoofedValues[0]; // X-axis
+        values[1] = spoofedValues[1]; // Y-axis
+        values[2] = spoofedValues[2]; // Z-axis
+        console.log(
+          `[Linear Accelerometer] Activity: ${spoofingActivity}, Values: ${values}`
+        );
+      }
+
+      // Call the original method with the (possibly) modified values
       return this.dispatchSensorEvent(handle, values, accuracy, timestamp);
     };
 
     console.log("Frida script setup complete. Default activity: sedentary");
 
-    // Optionally, change activity type dynamically
+    // Dynamically change activity type
     setTimeout(() => {
       spoofingActivity = "running";
       console.log("Switched to running activity.");
     }, 30000); // Switch to running after 30 seconds
+
     setTimeout(() => {
       spoofingActivity = "driving";
       console.log("Switched to driving activity.");
