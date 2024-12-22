@@ -7,7 +7,6 @@ setTimeout(() => {
     const currentApplication = ActivityThread.currentApplication();
     if (currentApplication === null) {
       console.error("Failed to retrieve current application.");
-      // return;
     }
     const context = currentApplication.getApplicationContext();
     if (context === null) {
